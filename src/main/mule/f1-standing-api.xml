@@ -10,6 +10,20 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="447adcbe-b56d-4c45-9ab8-a26fd8f1842c" >
 		<http:request-connection host="api.openf1.org" port="443" protocol="HTTPS"/>
 	</http:request-config>
+	<flow name="welcomeFlow" doc:id="a1b2c3d4-0000-0000-0000-000000000001" >
+		<http:listener doc:name="Listener" doc:id="a1b2c3d4-0000-0000-0000-000000000002" config-ref="HTTP_Listener_config" path="/"/>
+		<set-payload doc:name="Set Payload" doc:id="a1b2c3d4-0000-0000-0000-000000000003" value='#[output application/json
+---
+{
+	"name": "F1 Standings API",
+	"version": "1.0",
+	"status": "running",
+	"endpoints": {
+		"drivers": "/api/standings/drivers",
+		"constructors": "/api/standings/constructors"
+	}
+}]'/>
+	</flow>
 	<flow name="driverflow" doc:id="6b155052-568b-4410-868d-2d3305218946" >
 		<http:listener doc:name="Listener" doc:id="1afeef62-989b-4071-a13c-5ad8fd4df5b2" config-ref="HTTP_Listener_config" path="/api/standings/drivers"/>
 		<http:request method="GET" doc:name="Request" doc:id="3a457fa0-907e-4dfe-84c2-be43bb3d9089" config-ref="HTTP_Request_configuration" path="/v1/championship_drivers">
