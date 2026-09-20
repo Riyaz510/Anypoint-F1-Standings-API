@@ -11,18 +11,12 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<http:request-connection host="api.openf1.org" port="443" protocol="HTTPS"/>
 	</http:request-config>
 	<flow name="welcomeFlow" doc:id="a1b2c3d4-0000-0000-0000-000000000001" >
-		<http:listener doc:name="Listener" doc:id="a1b2c3d4-0000-0000-0000-000000000002" config-ref="HTTP_Listener_config" path="/"/>
-		<set-payload doc:name="Set Payload" doc:id="a1b2c3d4-0000-0000-0000-000000000003" value='#[output application/json
----
-{
-	"name": "F1 Standings API",
-	"version": "1.0",
-	"status": "running",
-	"endpoints": {
-		"drivers": "/api/standings/drivers",
-		"constructors": "/api/standings/constructors"
-	}
-}]'/>
+		<http:listener doc:name="Listener" doc:id="a1b2c3d4-0000-0000-0000-000000000002" config-ref="HTTP_Listener_config" path="/">
+			<http:response statusCode="200">
+				<http:headers><![CDATA[#[output application/java --- {"Content-Type" : "text/html; charset=UTF-8"}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<set-payload doc:name="Set Payload" doc:id="a1b2c3d4-0000-0000-0000-000000000003" value="#[output text/plain --- readUrl('classpath://welcome.html', 'text/plain')]" mimeType="text/html"/>
 	</flow>
 	<flow name="driverflow" doc:id="6b155052-568b-4410-868d-2d3305218946" >
 		<http:listener doc:name="Listener" doc:id="1afeef62-989b-4071-a13c-5ad8fd4df5b2" config-ref="HTTP_Listener_config" path="/api/standings/drivers"/>
@@ -37,7 +31,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="constructorsFlow" doc:id="db08913b-afd1-4114-a957-ea384979246c" >
 		<http:listener doc:name="Listener" doc:id="e8997be7-a160-47a9-8549-459782a13321" config-ref="HTTP_Listener_config" path="/api/standings/constructors"/>
 		<http:request method="GET" doc:name="Request" doc:id="6904b6e6-f30f-40bd-9ee5-def3e6e1c299" path="/v1/championship_teams" config-ref="HTTP_Request_configuration">
-			<http:query-params ><![CDATA[#[output application/java
+			<http:query-params><![CDATA[#[output application/java
 ---
 {
 	session_key : 9839

@@ -28,7 +28,8 @@ f1-standing-api/
 │   │   └── resources/
 │   │       ├── api/                       # API specification directory (RAML)
 │   │       ├── application-types.xml      # Mule type catalog
-│   │       └── log4j2.xml                 # Log4j2 logging configuration
+│   │       ├── log4j2.xml                 # Log4j2 logging configuration
+│   │       └── welcome.html              # HTML landing page served at root /
 │   └── test/
 ├── exchange-docs/
 │   └── home.md                            # Anypoint Exchange documentation
@@ -40,7 +41,11 @@ f1-standing-api/
 
 ## Mule Flows
 
-The core logic lives in `src/main/mule/f1-standing-api.xml` and defines two flows:
+The core logic lives in `src/main/mule/f1-standing-api.xml` and defines three flows:
+
+### `welcomeFlow`
+- **Listener**: `GET /`
+- Serves `welcome.html` from the classpath — an HTML page with clickable links to both API endpoints.
 
 ### `driverflow`
 - **Listener**: `GET /api/standings/drivers`
@@ -80,6 +85,7 @@ The core logic lives in `src/main/mule/f1-standing-api.xml` and defines two flow
 3. **Access the endpoints** (default port `8081`):
 
    ```
+   GET http://localhost:8081/                          # Landing page with clickable links
    GET http://localhost:8081/api/standings/drivers
    GET http://localhost:8081/api/standings/constructors
    ```
@@ -159,6 +165,18 @@ This application consumes the [OpenF1 REST API](https://openf1.org).
 | `GET /v1/championship_teams` | Constructor championship standings filtered by `session_key` |
 
 > **Note:** The `session_key` query parameter is hardcoded to `9839` in the current implementation. To target a different F1 season/session, update the DataWeave query-param block in each flow.
+
+---
+
+## Live Deployment
+
+This API is deployed on **MuleSoft CloudHub**.
+
+| Endpoint | URL |
+|---|---|
+| Landing Page | https://f1-standings-riyaz-yqj928.5sc6y6-2.usa-e2.cloudhub.io/ |
+| Driver Standings | https://f1-standings-riyaz-yqj928.5sc6y6-2.usa-e2.cloudhub.io/api/standings/drivers |
+| Constructor Standings | https://f1-standings-riyaz-yqj928.5sc6y6-2.usa-e2.cloudhub.io/api/standings/constructors |
 
 ---
 
